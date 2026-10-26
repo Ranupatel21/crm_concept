@@ -1,0 +1,410 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil Calibri;}{\f2\fnil\fcharset1 Cambria Math;}}
+{\*\generator Riched20 10.0.19041}{\*\mmathPr\mmathFont2\mwrapIndent1440 }\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 # HYCO CRM \f1\emdash  Master Project Context & Development Prompt\par
+\par
+## 1. Project Overview\par
+\par
+I am building a custom Lead Management CRM for HYCO. The CRM should provide a workflow similar to TeleCRM, especially its lead management interface, lead assignment, WhatsApp communication, call activity tracking, follow-ups, notes, and activity history.\par
+\par
+The goal is to manage leads from multiple sources in one centralized system and allow the team to communicate with leads, track every activity, and manage the complete lead lifecycle.\par
+\par
+**Important:** This is primarily a lead-management CRM, not an e-commerce application.\par
+\par
+Do not prioritize website orders, inventory, payment gateways, or order processing unless I explicitly request them later.\par
+\par
+## 2. Core Business Strategy\par
+\par
+The central concept is:\par
+\par
+**Lead acquisition \f2\u8594?\f0  Lead management \f2\u8594?\f0  Assignment \f2\u8594?\f0  Communication \f2\u8594?\f0  Follow-up \f2\u8594?\f0  Status progression \f2\u8594?\f0  Conversion \f2\u8594?\f0  Reporting**\par
+\par
+Leads may come from:\par
+- Manual single-lead entry.\par
+- Excel/CSV file imports.\par
+- WhatsApp conversations.\par
+- Facebook lead data imported through Excel files.\par
+\par
+Do not implement direct Facebook API integration unless explicitly requested.\par
+\par
+All lead sources should ultimately create or update records in the same lead-management system.\par
+\par
+## 3. Main CRM Features\par
+\par
+### A. Lead Management\par
+\par
+The CRM must support:\par
+- Add a single lead.\par
+- Import multiple leads through Excel/CSV.\par
+- View all leads.\par
+- Search leads by name, phone, email, and other supported fields.\par
+- Filter and sort leads.\par
+- View individual lead details.\par
+- Edit lead information.\par
+- Assign and reassign leads.\par
+- Update lead status.\par
+- Add notes.\par
+- Schedule follow-ups.\par
+- View complete lead activity history.\par
+- Prevent or flag duplicate leads.\par
+- Support bulk actions where appropriate.\par
+\par
+Lead fields may include:\par
+- Name.\par
+- Phone number.\par
+- Alternate phone number.\par
+- Email.\par
+- State.\par
+- City.\par
+- Address.\par
+- Product or service of interest.\par
+- Quantity.\par
+- Lead source.\par
+- Lead status.\par
+- Assigned employee, if assignment is enabled.\par
+- Notes.\par
+- Creation date.\par
+- Last activity date.\par
+- Next follow-up date.\par
+\par
+Keep fields configurable where practical. Do not make every field mandatory without a business requirement.\par
+\par
+### B. Lead Sources\par
+\par
+Supported lead sources:\par
+1. Manual entry.\par
+2. Excel/CSV import.\par
+3. WhatsApp.\par
+4. Facebook data imported through Excel.\par
+\par
+Store the source of each lead so that reports can distinguish between channels.\par
+\par
+For imported leads, preserve import-batch information when useful, such as filename, import date, and row number.\par
+\par
+### C. Excel/CSV Import Strategy\par
+\par
+Implement a reliable import workflow:\par
+\par
+1. User selects and uploads a file.\par
+2. Validate file type and size.\par
+3. Parse and preview the data.\par
+4. Map spreadsheet columns to CRM fields.\par
+5. Validate phone numbers and other supported fields.\par
+6. Detect existing or duplicate leads.\par
+7. Show valid rows and errors before import.\par
+8. Allow the user to choose an appropriate duplicate-handling strategy.\par
+9. Import valid records.\par
+10. Display an import summary, including created records, skipped duplicates, and failed rows.\par
+\par
+Avoid silently discarding invalid data. Never execute spreadsheet formulas or treat spreadsheet contents as trusted instructions.\par
+\par
+### D. WhatsApp Integration\par
+\par
+The business requirement is to use **WhatsApp Web-based integration, not the WhatsApp Cloud API**.\par
+\par
+The intended workflow is:\par
+\par
+1. An authorized CRM user connects a WhatsApp account by scanning a QR code.\par
+2. The connection status is visible in the CRM.\par
+3. Incoming messages are received.\par
+4. The CRM identifies an existing lead using the phone number.\par
+5. If no matching lead exists, the system can create a new lead according to the configured workflow.\par
+6. The conversation and messages are associated with the lead.\par
+7. Users can view conversation history and relevant lead details.\par
+8. WhatsApp activity is recorded in the lead's activity timeline.\par
+9. Users can initiate permitted WhatsApp actions from the lead detail screen.\par
+\par
+Use a suitable, actively maintained integration approach after verifying compatibility and security.\par
+\par
+Important technical considerations:\par
+- WhatsApp Web automation libraries may be unofficial and can break when WhatsApp changes its implementation.\par
+- Account restrictions or blocking are possible.\par
+- Sessions must be stored securely.\par
+- QR authentication must not expose credentials or session files.\par
+- Handle reconnects, disconnections, duplicate messages, and errors.\par
+- Do not claim that messages were delivered or read unless that status is actually available.\par
+- Never invent delivery statuses.\par
+- Do not integrate the Cloud API unless I explicitly change this requirement.\par
+\par
+### E. Call Logs\par
+\par
+The CRM should support call activity tracking when a real source of call information is available.\par
+\par
+Possible call log fields:\par
+- Lead.\par
+- Phone number.\par
+- Call direction.\par
+- Call status.\par
+- Start time.\par
+- End time.\par
+- Duration.\par
+- Employee/user.\par
+- Notes or disposition.\par
+- Recording reference, if available and legally permitted.\par
+\par
+Distinguish between:\par
+- Displaying call logs.\par
+- Initiating actual phone calls.\par
+- Receiving call events from a telephony provider.\par
+- Recording or storing call recordings.\par
+\par
+These are separate capabilities. Do not claim that actual calling or recording works without a compatible provider or device integration.\par
+\par
+Do not add a telephony provider or paid service without discussing the requirement first.\par
+\par
+### F. Follow-ups and Tasks\par
+\par
+Users should be able to:\par
+- Schedule a follow-up against a lead.\par
+- Select date and time.\par
+- Choose a follow-up type, such as call, WhatsApp, email, or meeting.\par
+- Add notes.\par
+- Mark a follow-up completed or cancelled.\par
+- View upcoming, overdue, and completed follow-ups.\par
+- View follow-up history from the lead detail page.\par
+\par
+If notifications are implemented, trigger them from actual follow-up events and respect the configured notification preferences.\par
+\par
+### G. Lead Activity History\par
+\par
+Every important lead-related action should be recorded in a chronological timeline.\par
+\par
+Examples:\par
+- Lead created.\par
+- Lead imported from Excel.\par
+- Lead assigned or reassigned.\par
+- Lead status changed.\par
+- Note added.\par
+- Follow-up scheduled, completed, or cancelled.\par
+- WhatsApp message received or sent.\par
+- Call initiated or logged.\par
+- Lead information updated.\par
+\par
+Activity records should include the action type, timestamp, relevant lead, and actor when known.\par
+\par
+System-generated activities should be distinguishable from actions performed by users.\par
+\par
+Avoid storing unnecessary sensitive message content in general-purpose audit logs.\par
+\par
+### H. Lead Status Management\par
+\par
+Lead statuses should represent the business's actual sales workflow.\par
+\par
+Possible starting statuses:\par
+- New.\par
+- Contacted.\par
+- Qualified.\par
+- Proposal.\par
+- Negotiation.\par
+- Won.\par
+- Lost.\par
+\par
+These are proposed defaults, not mandatory final business rules. Keep statuses configurable or confirm the exact list before hardcoding it.\par
+\par
+Status transitions must be validated. If a lead is marked Won or Lost, preserve the history of the status change.\par
+\par
+Do not confuse a lead's sales status with a WhatsApp conversation status or a follow-up status.\par
+\par
+### I. Lead Assignment\par
+\par
+If assignment is enabled, support:\par
+- Assigning leads to a user.\par
+- Reassigning leads.\par
+- Viewing leads assigned to a user.\par
+- Filtering by assignee.\par
+- Optional bulk assignment.\par
+- Optional balanced distribution of imported leads.\par
+\par
+If automatic distribution is introduced, define its rules explicitly. Do not silently assign leads based on arbitrary database ordering.\par
+\par
+### J. Lead Detail Page\par
+\par
+The lead detail page should bring important information together:\par
+- Contact details.\par
+- Source.\par
+- Status.\par
+- Assignment.\par
+- Product and quantity.\par
+- Notes.\par
+- Follow-ups.\par
+- WhatsApp conversation.\par
+- Call history.\par
+- Activity timeline.\par
+\par
+The interface should be inspired by the practical workflow visible in TeleCRM, but the implementation must use our own code and design.\par
+\par
+## 4. Technical Architecture\par
+\par
+The existing backend was started with:\par
+- JavaScript.\par
+- Node.js.\par
+- Express.js.\par
+- MongoDB.\par
+- Mongoose.\par
+- JWT authentication.\par
+- bcryptjs for password hashing.\par
+- ESM modules using `"type": "module"`.\par
+\par
+The frontend is a separate application. Inspect the actual repository before assuming the frontend framework, file structure, or API conventions.\par
+\par
+Backend conventions:\par
+- Use JavaScript, not TypeScript, unless I explicitly request otherwise.\par
+- Keep the Express application/server setup in `src/server.js` if that is the current project structure.\par
+- Use Mongoose models for persistent data.\par
+- Keep routes, controllers, models, and middleware organized.\par
+- Use environment variables for secrets and deployment-specific configuration.\par
+- Validate incoming request data.\par
+- Handle expected errors with appropriate HTTP status codes.\par
+- Protect endpoints that require authentication.\par
+- Avoid exposing passwords, tokens, or private session data in responses or logs.\par
+\par
+Do not create extra architecture layers merely for the sake of abstraction. Add services, helpers, or other modules only when they solve a real problem.\par
+\par
+## 5. Authentication, Roles, and Permissions\par
+\par
+The earlier backend included three roles:\par
+- super_admin\par
+- manager\par
+- sales_employee\par
+\par
+However, the latest UI-cleanup requirement is to remove the previous role system if the current business workflow does not need it.\par
+\par
+**Do not assume role-based permissions are still required. Inspect the latest code and confirm the intended access model before removing roles.**\par
+\par
+Removing roles requires reviewing:\par
+- User schema.\par
+- JWT/authentication logic.\par
+- Authorization middleware.\par
+- Route-level role checks.\par
+- Frontend role-dependent rendering.\par
+- Lead assignment and access restrictions.\par
+\par
+Do not simply delete a role field while leaving incompatible middleware or route checks.\par
+\par
+If authentication is still required, preserve secure login and password hashing. Never hardcode production credentials.\par
+\par
+## 6. Database and Mock Data\par
+\par
+The final application must use persistent database records rather than frontend-only dummy data.\par
+\par
+Before connecting or changing the database:\par
+1. Inspect the current project.\par
+2. Identify mock data and hardcoded arrays.\par
+3. Identify the API calls already implemented.\par
+4. Identify the existing database models and routes.\par
+5. Replace mock data with real API responses.\par
+6. Implement appropriate loading, empty, and error states.\par
+7. Verify create, read, update, and delete operations where applicable.\par
+8. Avoid deleting real database records during cleanup.\par
+\par
+The database connection will be configured by the project owner. Never expose database credentials or commit `.env` files.\par
+\par
+Do not seed demo records in production.\par
+\par
+## 7. UI and Login Cleanup\par
+\par
+The CRM should provide a professional lead-management interface with:\par
+- Lead list and search.\par
+- Filters.\par
+- Lead details.\par
+- Notes and activity history.\par
+- Follow-ups.\par
+- WhatsApp controls.\par
+- Excel import.\par
+- Clear loading, empty, success, and error states.\par
+\par
+The login screen must not display demo usernames, demo passwords, or hardcoded credentials.\par
+\par
+Password fields should be masked by default. Do not display a user's actual password in the interface.\par
+\par
+Preserve working features and existing styling unless a change is necessary.\par
+\par
+## 8. Security and Reliability\par
+\par
+Follow these principles:\par
+- Validate and sanitize user input.\par
+- Use authentication and authorization appropriate to the final access model.\par
+- Prevent unauthorized access to other users' leads where required.\par
+- Validate file uploads and limit file size.\par
+- Prevent duplicate imports and duplicate WhatsApp message processing.\par
+- Protect WhatsApp session credentials.\par
+- Do not trust client-side validation alone.\par
+- Avoid logging secrets or unnecessary personal information.\par
+- Use transactions or other consistency protections where multi-step operations could leave partial records.\par
+- Add rate limiting and other production protections where appropriate.\par
+- Never use temporary or demo endpoints as substitutes for real application functionality.\par
+\par
+## 9. Development Rules\par
+\par
+These rules are important:\par
+\par
+1. Inspect the existing repository before making changes.\par
+2. Do not rewrite the entire project without a clear reason.\par
+3. Do not invent files, functions, routes, or schemas that have not been checked.\par
+4. Reuse existing working functionality wherever possible.\par
+5. Do not add unnecessary demo APIs, health-check APIs, or temporary test features.\par
+6. Do not implement unrelated order management, inventory, payments, or e-commerce features.\par
+7. Do not integrate Facebook APIs or WhatsApp Cloud API unless explicitly requested.\par
+8. Provide exact file paths and complete code for necessary changes.\par
+9. Explain which files need modification and why.\par
+10. Test the actual workflow after changes.\par
+11. Identify breaking changes before applying them.\par
+12. Never claim a feature is complete without verifying it.\par
+\par
+## 10. Current Project Status\par
+\par
+The earlier backend implementation included:\par
+- Authentication and JWT.\par
+- User management.\par
+- Lead management.\par
+- Lead-to-customer conversion.\par
+- Customer records.\par
+- Follow-ups.\par
+- A provider-neutral WhatsApp webhook and conversation/message storage.\par
+\par
+Some of these modules may need modification to match the latest lead-centric scope.\par
+\par
+Do not assume every previous implementation is production-ready or still required. Inspect the current code before deciding what to retain, modify, or remove.\par
+\par
+The latest requested cleanup includes:\par
+- Remove mock data.\par
+- Connect the interface to persistent database/API data.\par
+- Remove the old role system if it is no longer needed.\par
+- Remove visible demo credentials from the login screen.\par
+\par
+The next step is to inspect the current repository and produce a change plan before modifying code.\par
+\par
+## 11. Priorities\par
+\par
+Recommended implementation order:\par
+\par
+1. Inspect the current codebase.\par
+2. Confirm the final authentication/access model.\par
+3. Remove mock data and connect existing screens to real APIs.\par
+4. Finalize lead fields and statuses.\par
+5. Finalize manual lead creation.\par
+6. Finalize Excel/CSV import with preview, mapping, and duplicate handling.\par
+7. Verify lead assignment and filtering.\par
+8. Implement or refine WhatsApp Web integration.\par
+9. Complete follow-ups and tasks.\par
+10. Build the lead activity timeline.\par
+11. Integrate call logs if a real call-data source is available.\par
+12. Finalize reporting and dashboard data.\par
+13. Test security, reliability, and deployment.\par
+\par
+## 12. How to Work With Me\par
+\par
+I prefer practical, direct development help.\par
+\par
+When modifying the project:\par
+- Explain the concept briefly.\par
+- Inspect the actual files.\par
+- Give exact file paths.\par
+- Provide complete replacement code when needed.\par
+- Keep the implementation simple and production-oriented.\par
+- Avoid unnecessary theory and repeated explanations.\par
+- Ask questions only when a missing business decision materially affects the implementation.\par
+- If a requirement is ambiguous, state your assumption and wait before making a destructive change.\par
+\par
+**First task:** Inspect the current repository and summarize the existing frontend, backend, database models, routes, mock data, authentication, and WhatsApp implementation. Then propose a minimal, safe cleanup plan. Do not start a full rewrite before that review.\lang9\par
+}
+ 
